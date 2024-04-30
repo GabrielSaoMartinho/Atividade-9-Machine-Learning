@@ -1,0 +1,187 @@
+import matplotlib.pyplot as plt
+import math
+
+valores_X1 = [1.9, 3.4, 2.5, 1.5, 3.5, 2.2, 3.6, 5, 4.5, 1.9, 1, 1.9, 0.8, 1.6]
+valores_X2 = [7.3, 7.5, 6.8, 6.5, 6.4, 5.8, 4, 3.2, 2.4, 3, 2.7, 2.4, 2, 1.8]
+
+centroides = [[3.4,5.2],[6,2.6],[1,1]]
+
+lista_distancia_centroide_1 = []
+lista_distancia_centroide_2 = []
+lista_distancia_centroide_3 = []
+
+listaCores = ['blue', 'red', 'green']
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-centroides[0][0])**2)+((valores_X2[c]-centroides[0][1])**2))
+    lista_distancia_centroide_1.append(a)
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-centroides[1][0])**2)+((valores_X2[c]-centroides[1][1])**2))
+    lista_distancia_centroide_2.append(a)
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-centroides[2][0])**2)+((valores_X2[c]-centroides[2][1])**2))
+    lista_distancia_centroide_3.append(a)
+
+print(lista_distancia_centroide_1)
+print(lista_distancia_centroide_2)
+print(lista_distancia_centroide_3)
+
+centroide1 = []
+centroide11 = []
+centroide17 = []
+
+for c in range(0,len(lista_distancia_centroide_1)):
+    grupo1 = lista_distancia_centroide_1[c]
+    grupo2 = lista_distancia_centroide_2[c]
+    grupo3 = lista_distancia_centroide_3[c]
+
+    a = c
+    if a >= 6:
+        a += 1
+    if a >= 10:
+        a += 1
+
+    if grupo1 < grupo2 and grupo1 < grupo3:
+        print(f"valor {a+1} == centroide 1")
+        centroide1.append([valores_X1[c],valores_X2[c]])
+        print(centroide1)
+    elif grupo3 < grupo1 and grupo3 < grupo2:
+        print(f"valor {a+1} == centroide 17")
+        centroide17.append([valores_X1[c], valores_X2[c]])
+        print(centroide17)
+    elif grupo2 < grupo3 and grupo2 < grupo1:
+        print(f"valor {a+1} == centroide 11")
+        centroide11.append([valores_X1[c], valores_X2[c]])
+        print(centroide11)
+
+
+for i, centroide in enumerate(centroides):
+    plt.scatter(centroide[0], centroide[1], edgecolor='black', color=listaCores[i])
+plt.scatter(valores_X1,valores_X2, color='purple')
+plt.title("Pontos antes da divisão de cada grupo")
+plt.xlim(0, 7.75)
+plt.ylim(0, 7.75)
+plt.show()
+
+for i, centroide in enumerate(centroides):
+    plt.scatter(centroide[0], centroide[1], edgecolor='black', color=listaCores[i])
+for i, centroide in enumerate(centroide1):
+    plt.scatter(centroide1[i][0],centroide1[i][1], color=listaCores[0])
+for i, centroide in enumerate(centroide11):
+    plt.scatter(centroide11[i][0],centroide11[i][1], color=listaCores[1])
+for i, centroide in enumerate(centroide17):
+    plt.scatter(centroide17[i][0],centroide17[i][1], color=listaCores[2])
+plt.title("Pontos depois da divisão de cada grupo")
+plt.xlim(0, 7.75)
+plt.ylim(0, 7.75)
+plt.show()
+
+def somarvalores(a):
+    soma1 = 0
+    soma2 = 0
+    listasomas = []
+    for c in range(0,len(a)):
+        soma1 += a[c][0]
+    listasomas.append(soma1/len(a))
+    for c in range(0,len(a)):
+        soma2 += a[c][1]
+    listasomas.append(soma2/len(a))
+    return listasomas
+
+listaNovosCentroides = []
+print("\n")
+novocentroide1 = somarvalores(centroide1)
+print(novocentroide1)
+listaNovosCentroides.append(novocentroide1)
+novocentroide11 =somarvalores(centroide11)
+print(novocentroide11)
+listaNovosCentroides.append(novocentroide11)
+novocentroide17 =somarvalores(centroide17)
+print(novocentroide17)
+listaNovosCentroides.append(novocentroide17)
+print('\n')
+print(centroides)
+print(listaNovosCentroides)
+
+for i, centroide in enumerate(listaNovosCentroides):
+    plt.scatter(centroide[0], centroide[1], edgecolor='black', color=listaCores[i])
+for i, centroide in enumerate(centroides):
+    plt.scatter(centroide[0], centroide[1], edgecolor='black', color=listaCores[i])
+
+    plt.annotate(
+        '',
+        xy=(listaNovosCentroides[i][0], listaNovosCentroides[i][1]),
+        xytext=(centroide[0], centroide[1]),
+        arrowprops=dict(arrowstyle='->', color=listaCores[i], lw=2)
+    )
+plt.scatter(valores_X1, valores_X2, color='purple')
+plt.title("Os três centróides recalculados depois da primeira execução")
+plt.xlim(0, 7.75)
+plt.ylim(0, 7.75)
+plt.show()
+
+lista_distancia_centroide_1_Novo = []
+lista_distancia_centroide_2_Novo = []
+lista_distancia_centroide_3_Novo = []
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-listaNovosCentroides[0][0])**2)+((valores_X2[c]-listaNovosCentroides[0][1])**2))
+    lista_distancia_centroide_1_Novo.append(a)
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-listaNovosCentroides[1][0])**2)+((valores_X2[c]-listaNovosCentroides[1][1])**2))
+    lista_distancia_centroide_2_Novo.append(a)
+
+for c in range(0, len(valores_X1)):
+    a = math.sqrt(((valores_X1[c]-listaNovosCentroides[2][0])**2)+((valores_X2[c]-listaNovosCentroides[2][1])**2))
+    lista_distancia_centroide_3_Novo.append(a)
+
+print(lista_distancia_centroide_1_Novo)
+print(lista_distancia_centroide_2_Novo)
+print(lista_distancia_centroide_3_Novo)
+
+centroide1_Novo = []
+centroide11_Novo = []
+centroide17_Novo = []
+
+for c in range(0,len(lista_distancia_centroide_1_Novo)):
+    grupo1_Novo = lista_distancia_centroide_1_Novo[c]
+    grupo2_Novo = lista_distancia_centroide_2_Novo[c]
+    grupo3_Novo = lista_distancia_centroide_3_Novo[c]
+
+    a = c
+    if a >= 6:
+        a += 1
+    if a >= 10:
+        a += 1
+    print(grupo1_Novo)
+    print(grupo2_Novo)
+    print(grupo3_Novo)
+    if grupo1_Novo < grupo3_Novo and grupo1_Novo < grupo2_Novo:
+            print(f"valor {a+1} == centroide 1")
+            centroide1_Novo.append([valores_X1[c],valores_X2[c]])
+            print(centroide1_Novo)
+    elif grupo3_Novo < grupo1_Novo and grupo3_Novo < grupo2_Novo:
+            print(f"valor {a+1} == centroide 17")
+            centroide17_Novo.append([valores_X1[c], valores_X2[c]])
+            print(centroide17_Novo)
+    elif grupo2_Novo < grupo1_Novo and grupo2_Novo < grupo3_Novo:
+        print(f"valor {a+1} == centroide 11")
+        centroide11_Novo.append([valores_X1[c], valores_X2[c]])
+        print(centroide11_Novo)
+
+print(listaNovosCentroides)
+for i, centroide in enumerate(listaNovosCentroides):
+    plt.scatter(listaNovosCentroides[i][0], listaNovosCentroides[i][1], edgecolor='black', color=listaCores[i])
+for i, centroide in enumerate(centroide1_Novo):
+    plt.scatter(centroide1_Novo[i][0],centroide1_Novo[i][1], color=listaCores[0])
+for i, centroide in enumerate(centroide11_Novo):
+    plt.scatter(centroide11_Novo[i][0],centroide11_Novo[i][1], color=listaCores[1])
+for i, centroide in enumerate(centroide17_Novo):
+    plt.scatter(centroide17_Novo[i][0],centroide17_Novo[i][1], color=listaCores[2])
+plt.title("Pontos depois da divisão de cada grupo")
+plt.xlim(0, 7.75)
+plt.ylim(0, 7.75)
+plt.show()
